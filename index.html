@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <link rel="icon" type="image/webp" href="locantof1.webp">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #050505;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .main-wrapper {
+            width: 100%;
+            height: 100%;
+            max-width: 480px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), inset 0 0 60px rgba(0, 0, 0, 0.5);
+            background-color: #000;
+        }
+
+        .bg-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .bg-slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transform: scale(1.05);
+            transition: opacity 0.8s ease-in-out, transform 1.2s ease-in-out;
+        }
+        .bg-slide.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.85) 100%);
+            z-index: 2;
+        }
+
+        .content-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+            padding: 24px 20px;
+        }
+
+        .logo-container {
+            width: 100%;
+            max-width: 100%;
+            padding: 0 10px;
+            margin-top: 10px;
+        }
+        .logo-container img {
+            width: 100%;
+            max-width: 160px;
+            height: auto;
+            margin: 0 auto;
+            display: block;
+            filter: drop-shadow(0 0 12px rgba(255,255,255,0.4));
+        }
+        
+        .powered-by {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.85);
+            margin-top: 8px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            white-space: nowrap;
+        }
+        
+        .locanto-text {
+            font-weight: 800;
+            font-style: italic;
+            font-size: 1.2rem;
+        }
+        .lo-dark-blue { color: #2563eb; }
+        .can-vibrant-orange { color: #f97316; }
+        .to-reddish-orange { color: #ea580c; }
+
+        .middle-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 10px 0;
+        }
+
+        .text-line {
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            line-height: 1.15;
+            margin: 6px 0;
+            opacity: 0;
+        }
+        
+        .text-many-holes {
+            font-size: clamp(2.6rem, 10vw, 3.8rem);
+            color: #fff;
+            text-shadow: 0 0 15px rgba(255, 0, 85, 0.7), 0 0 30px rgba(255, 0, 85, 0.4);
+        }
+        
+        .slide-from-left {
+            animation: slideLeft 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+        
+        .text-waiting {
+            font-size: clamp(1.9rem, 7vw, 2.8rem);
+            color: #38bdf8;
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.7), 0 0 30px rgba(56, 189, 248, 0.4);
+        }
+        
+        .slide-from-right {
+            animation: slideRight 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+        
+        .text-free {
+            font-size: clamp(3rem, 12vw, 4.5rem);
+            color: #4ade80;
+            text-shadow: 0 0 20px rgba(74, 222, 128, 0.8), 0 0 40px rgba(74, 222, 128, 0.5);
+            margin-bottom: 20px;
+        }
+        
+        .slide-from-bottom {
+            animation: slideBottom 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards, 
+                       megaShake 0.18s infinite alternate linear;
+            animation-delay: 0s, 0.6s;
+        }
+
+        .cta-button {
+            display: none;
+            text-decoration: none;
+            padding: 16px 32px;
+            font-size: clamp(1.1rem, 5vw, 1.6rem);
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #000;
+            background: linear-gradient(135deg, #fef08a 0%, #facc15 50%, #eab308 100%);
+            border-radius: 100px;
+            box-shadow: 0 0 25px rgba(250, 204, 21, 0.6), inset 0 2px 4px rgba(255,255,255,0.8);
+            cursor: pointer;
+            border: none;
+            outline: none;
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 360px;
+            transition: transform 0.2s ease;
+        }
+        
+        .cta-button:active {
+            transform: scale(0.96);
+        }
+        
+        .button-active {
+            display: inline-block;
+            animation: pulseNudge 1.8s infinite ease-in-out;
+        }
+
+        .footer-copyright {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .blur-overlay-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 99999;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 24px;
+        }
+
+        .popup-highlight-text {
+            color: #ffffff;
+            font-size: clamp(1.2rem, 5vw, 1.7rem);
+            font-weight: 800;
+            text-transform: uppercase;
+            line-height: 1.35;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px rgba(255, 0, 85, 0.8), 2px 2px 8px rgba(0,0,0,0.9);
+            letter-spacing: 0.5px;
+            animation: textGlowPulse 1.2s infinite alternate ease-in-out;
+        }
+
+        .premium-buffer {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.08);
+            border-left-color: #4ade80;
+            border-top-color: #38bdf8;
+            border-right-color: #f43f5e;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.5));
+        }
+
+        .popup-powered-by {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            margin-top: 10px;
+        }
+
+        .popup-loading-subtext {
+            font-size: 0.8rem;
+            color: #4ade80;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-top: 10px;
+            text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+            animation: blinkText 0.8s infinite alternate;
+        }
+
+        /* Smooth Keyframes */
+        @keyframes slideLeft {
+            0% { transform: translateX(-100%) scale(0.9); opacity: 0; }
+            100% { transform: translateX(0) scale(1); opacity: 1; }
+        }
+        @keyframes slideRight {
+            0% { transform: translateX(100%) scale(0.9); opacity: 0; }
+            100% { transform: translateX(0) scale(1); opacity: 1; }
+        }
+        @keyframes slideBottom {
+            0% { transform: translateY(80px) scale(0.8); opacity: 0; }
+            100% { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        @keyframes megaShake {
+            0% { transform: translate(1px, 1px) rotate(0deg) scale(1); }
+            50% { transform: translate(-1px, -1px) rotate(-0.5deg) scale(1.02); }
+            100% { transform: translate(1px, -1px) rotate(0.5deg) scale(1.04); }
+        }
+        @keyframes pulseNudge {
+            0% { transform: scale(1); box-shadow: 0 0 20px rgba(250, 204, 21, 0.5); }
+            50% { transform: scale(1.04); box-shadow: 0 0 35px rgba(250, 204, 21, 0.8); }
+            100% { transform: scale(1); box-shadow: 0 0 20px rgba(250, 204, 21, 0.5); }
+        }
+        @keyframes textGlowPulse {
+            0% { text-shadow: 0 0 10px rgba(255, 0, 85, 0.6); transform: scale(1); }
+            100% { text-shadow: 0 0 25px rgba(74, 222, 128, 0.8); transform: scale(1.02); }
+        }
+        @keyframes blinkText {
+            0% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="mainWrapper" class="main-wrapper">
+        <div class="bg-slider">
+            <div class="bg-slide active" style="background-image: url('ki1.webp');"></div>
+            <div class="bg-slide" style="background-image: url('ki2.webp');"></div>
+            <div class="bg-slide" style="background-image: url('ki3.webp');"></div>
+            <div class="bg-slide" style="background-image: url('ki4.webp');"></div>
+            <div class="bg-slide" style="background-image: url('ki5.webp');"></div>
+        </div>
+
+        <div class="overlay"></div>
+
+        <div class="content-container">
+            <div class="logo-container">
+                <img src="lgd1.webp" alt="Logo">
+                <div class="powered-by">
+                    Powered by 
+                    <span class="locanto-text">
+                        <span class="lo-dark-blue">L</span><span class="lo-dark-blue">o</span><span class="can-vibrant-orange">c</span><span class="can-vibrant-orange">a</span><span class="can-vibrant-orange">n</span><span class="to-reddish-orange">t</span><span class="to-reddish-orange">o</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="middle-content">
+                <h1 id="text1" class="text-line text-many-holes">Many Holes</h1>
+                <h2 id="text2" class="text-line text-waiting">Waiting For You</h2>
+                <div id="text3" class="text-line text-free">Free</div>
+                
+                <button id="ctaBtn" class="cta-button">Get Hole</button>
+            </div>
+
+            <div class="footer-copyright">
+                Copyright © 2006-2026 Locanto™
+            </div>
+        </div>
+
+        <div id="blurScreen" class="blur-overlay-screen">
+            <div class="popup-highlight-text">
+                Fuck 99+ Small & Big Holes Near Your Area By Free Joining This Website
+            </div>
+            <div class="premium-buffer"></div>
+            <div class="popup-powered-by">
+                Powered by 
+                <span class="locanto-text">
+                    <span class="lo-dark-blue">L</span><span class="lo-dark-blue">o</span><span class="can-vibrant-orange">c</span><span class="can-vibrant-orange">a</span><span class="can-vibrant-orange">n</span><span class="to-reddish-orange">t</span><span class="to-reddish-orange">o</span>
+                </span>
+            </div>
+            <div class="popup-loading-subtext">
+                FREE Signup Page Loading...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // আপনার অ্যাফিলিয়েট লিংকটি নিচের ইনভার্টেড কমার ভেতরে বসানো আছে
+        const affiliateLink = "https://dateinreality.com/tds/ae?tds_campaign=s5014muz&tdsId=s5014muz_r&s1=int&utm_source=int&utm_sub=opnfnlconf&utm_term=2&clickid={clickid}&subid={Horny20p}&subid2={subid2}&affid=51dfb7cb";
+
+        const slides = document.querySelectorAll('.bg-slide');
+        let currentSlide = 0;
+
+        // স্লাইড পরিবর্তন আরও স্মুথ করা হয়েছে (৩ সেকেন্ড পরপর ব্যাকগ্রাউন্ড বদলাবে)
+        setInterval(() => {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }, 3000);
+
+        window.addEventListener('load', () => {
+            const t1 = document.getElementById('text1');
+            const t2 = document.getElementById('text2');
+            const t3 = document.getElementById('text3');
+            const btn = document.getElementById('ctaBtn');
+            const blurScreen = document.getElementById('blurScreen');
+
+            t1.classList.add('slide-from-left');
+
+            setTimeout(() => {
+                t2.classList.add('slide-from-right');
+            }, 350);
+
+            setTimeout(() => {
+                t3.classList.add('slide-from-bottom');
+                btn.classList.add('button-active');
+            }, 700);
+
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                blurScreen.style.display = 'flex';
+
+                // ৪ সেকেন্ড পর লিংক ওপেন হবে
+                setTimeout(() => {
+                    if (affiliateLink && affiliateLink.trim() !== "") {
+                        window.location.href = affiliateLink;
+                    } else {
+                        alert("দয়া করে কোডের ভেতরে অ্যাফিলিয়েট লিংকটি বসান!");
+                        blurScreen.style.display = 'none';
+                    }
+                }, 4000);
+            });
+        });
+    </script>
+</body>
+</html>
